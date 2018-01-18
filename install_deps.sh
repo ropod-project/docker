@@ -59,7 +59,7 @@ while :; do
   esac
 
 shift
-
+done
 
 ################ Communication modules #########################
 echo ""
