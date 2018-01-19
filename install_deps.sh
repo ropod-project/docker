@@ -1,16 +1,68 @@
 #!/bin/bash
 
+# Authors
+# -------
+#  * Sebastian Blumenthal (blumenthal@locomotec.com)
+#
+
+show_usage() {
+cat << EOF
+Usage: ./${0##*/} [--no-sudo] [--workspace-path=PATH] [--install-path=PATH] [-h|--help] [-j=VALUE] 
+E.g. : ./${0##*/} --workspace-path=/workspace --install-path=/opt 
+    -h|--help              Display this help and exit
+    --no-sudo              In case the system has no sudo command available. ion.
+    --workspace-path=PATH  Path to where libraries and bulild. Default is ../
+    --install-path=PATH    Path to where libraries and modeles are installed (make install) into.
+    -j=VALUE               used for make -jVAULE 
+EOF
+}
+
+# Error handling
+exec 3>&1 4>&2
+trap 'exec 2>&4 1>&3; echo "ERROR occured. See install_err.log for details."; cd ${SCRIPT_DIR}; return 1' ERR SIGHUP SIGINT SIGQUIT SIGILL SIGABRT SIGTERM
+exec > >(tee -a install.log) 2> >(tee -a install_err.log >&2)
+#exec 1> install.log
+#exec 2> install_err.log
+
+
+rm -f install.log install_err.log
+
+set -e
+# Any subsequent(*) commands which fail will cause the shell script to exit immediately
+
 # Default values
 SUDO="sudo"
 INSTALL_DIR="/usr/local/"
+WORKSPACE_DIR="./" 
 J="-j1"
+SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 # Handle command line options
 while :; do
   case $1 in
+    -h|-\?|--help)   # Call a "show_help" function to display a synopsis, then exit.
+      show_usage
+      exit
+      ;;
     --no-sudo)       
       SUDO=""
       ;;
+    --workspace-path)       # Takes an option argument, ensuring it has been specified.
+      if [ -n "$2" ]; then
+           WORKSPACE_DIR=$2
+          shift
+       else
+           printf 'ERROR: "--workspace-path" requires a non-empty option argument.\n' >&2
+           exit 1
+       fi
+       ;;
+    --workspace-path=?*)
+       WORKSPACE_DIR=${1#*=} # Delete everything up to "=" and assign the remainder.
+       ;;
+    --workspace-path=)         # Handle the case of an empty --file=
+      printf 'ERROR: "--workspace-path" requires a non-empty option argument.\n' >&2
+      exit 1
+       ;;
     --install-path)       # Takes an option argument, ensuring it has been specified.
       if [ -n "$2" ]; then
            INSTALL_DIR=$2
@@ -61,9 +113,33 @@ while :; do
 shift
 done
 
+echo "[Parameter] Sudo command is set to: ${SUDO}"
+echo "[Parameter] WORKSPACE_DIR is set to: ${WORKSPACE_DIR}"
+echo "[Parameter] INSTALL_DIR is set to: ${INSTALL_DIR}"
+echo "[Parameter] Parallel build parameter for make is set to: ${J}"
+
+
+# Go to workspace
+cd ${WORKSPACE_DIR}
+
 ################ Communication modules #########################
+#             Stable   Edge
+# libsodium   ?        1.0.15
+# libzmq      4.1.2    4.2.2
+# czmq        3.0.2    4.0.2
+# zyre        1.1.0    2.0.0
+
+ZMQ_VERSION=4.1.2
+CZMQ_VERSION=3.0.2
+ZYRE_VERSION=1.1.0 
+
 echo ""
 echo "### ZMQ communication modules  ###"
+echo ""
+echo "ZMQ_VERSION  = ${ZMQ_VERSION}"
+echo "CZMQ_VERSION = ${CZMQ_VERSION}"
+echo "ZYRE_VERSION = ${ZYRE_VERSION}"
+echo "" 
 
 echo "CZMQ dependencies:"
 if [ ! -d libsodium ]; then
@@ -82,11 +158,11 @@ echo "ZMQ library:"
 # Unfortunately there are no tags github so we have to use a tar ball.
 #git clone https://github.com/zeromq/libzmq.git
 #cd libzmq
-if [ ! -d zeromq-4.1.2 ]; then
-  wget http://download.zeromq.org/zeromq-4.1.2.tar.gz
-  tar -xvf zeromq-4.1.2.tar.gz
+if [ ! -d zeromq-${ZMQ_VERSION} ]; then
+  wget http://download.zeromq.org/zeromq-${ZMQ_VERSION}.tar.gz
+  tar -xvf zeromq-${ZMQ_VERSION}.tar.gz
 fi 
-cd zeromq-4.1.2
+cd zeromq-${ZMQ_VERSION}
 ./autogen.sh
 ./configure --with-libsodium=no --prefix=${INSTALL_DIR}
 make ${J}
@@ -97,11 +173,11 @@ cd ..
 echo "CZMQ library:"
 #git clone https://github.com/zeromq/czmq
 #cd czmq
-if [ ! -d czmq-3.0.2 ]; then
-  wget https://github.com/zeromq/czmq/archive/v3.0.2.tar.gz
-  tar zxvf v3.0.2.tar.gz
+if [ ! -d czmq-${CZMQ_VERSION} ]; then
+  wget https://github.com/zeromq/czmq/archive/v${CZMQ_VERSION}.tar.gz
+  tar zxvf v${CZMQ_VERSION}.tar.gz
 fi
-cd czmq-3.0.2/
+cd czmq-${CZMQ_VERSION}/
 ./autogen.sh
 ./configure --prefix=${INSTALL_DIR}
 make ${J}
@@ -110,11 +186,11 @@ ${SUDO} ldconfig
 cd ..
 
 echo "Zyre library:"
-if [ ! -d zyre-1.1.0 ]; then
+if [ ! -d zyre-${ZYRE_VERSION} ]; then
   wget https://github.com/zeromq/zyre/archive/v1.1.0.tar.gz
-  tar zxvf v1.1.0.tar.gz
+  tar zxvf v${ZYRE_VERSION}.tar.gz
 fi
-cd zyre-1.1.0/
+cd zyre-${ZYRE_VERSION}/
 sh ./autogen.sh
 ./configure --prefix=${INSTALL_DIR}
 make ${J}
@@ -122,3 +198,9 @@ ${SUDO} make install
 ${SUDO} ldconfig
 cd ..
 
+
+
+
+cd ${SCRIPT_DIR} # go back
+set +e
+echo "SUCCESS"
