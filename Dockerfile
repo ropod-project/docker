@@ -1,4 +1,4 @@
-# Baseline developer image to compile and launch C++ componentes of the ROPOD EU project. 
+# Baseline developer image to compile and launch C++ components of the ROPOD EU project. 
 #
 
 FROM ubuntu:16.04
@@ -39,6 +39,7 @@ RUN cd /opt && \
     rm -rf /opt/googleTestMock
 
 # Get the install script
-RUN cd /workspace; wget https://raw.githubusercontent.com/blumenthal/ropod-base-cpp/master/innstall_deps.sh
-RUN cd /workspace; /bin/bash -c "source ~/.bashrc"; /bin/bash -c "./install.sh --workspace-path=/workspace --install-path=/opt --no-sudo -j=4"
+RUN cd /workspace; wget https://raw.githubusercontent.com/blumenthal/ropod-base-cpp/master/install_deps.sh
+RUN cd /workspace; /bin/bash -c "source ~/.bashrc"; /bin/bash -c "./install.sh --workspace-path=/workspace --install-path=/usr/inlude --no-sudo -j=2"
+
 # 
