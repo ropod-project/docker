@@ -5,10 +5,11 @@ FROM ubuntu:16.04
 MAINTAINER Sebastian Blumenthal
 
 ENV WORKSPACE_DIR /workspace
+WORKDIR /workspace
 
 RUN apt-get -y update && apt-get install -y \
 	nano \
 	git \
 	cmake \
-	build-essantials \
+	build-essential \
 	automake	
