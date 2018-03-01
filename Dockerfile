@@ -18,6 +18,8 @@ RUN apt-get -y update && apt-get install -y \
 	libtool-bin \
 	pkg-config \
 	wget \
+	curl \
+	unzip \
 	libjsoncpp-dev
 		
 # Install Gtest 1.7 from source
