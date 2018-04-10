@@ -198,6 +198,21 @@ ${SUDO} make install
 ${SUDO} ldconfig
 cd ..
 
+### Optional JSON library; used for validation
+echo "Libvariant (JSON)"
+if [ ! -d libvariant ]; then
+  hg clone https://bitbucket.org/gallen/libvariant
+fi
+cd libvariant
+mkdir build -p
+cd build
+cmake ..
+cmake -DBUILD_SHARED_LIBS=true -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} ..
+# Note that UBX modules need the -fPIC flag, thus we have to enable the shared flag for Libvariant.
+make ${J}
+${SUDO} make install
+cd ..
+cd ..
 
 
 

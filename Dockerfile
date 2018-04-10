@@ -11,6 +11,7 @@ WORKDIR /workspace
 RUN apt-get -y update && apt-get install -y \
 	nano \
 	git \
+	mercurial \
 	cmake \
 	build-essential \
 	automake \
