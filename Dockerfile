@@ -42,7 +42,8 @@ RUN cd /opt && \
     rm -rf /opt/googleTestMock
 
 # Get the install script
-RUN cd /opt; wget https://raw.githubusercontent.com/blumenthal/ropod-base-cpp/master/install_deps.sh; chmod 755 install_deps.sh 
-RUN cd /opt; /bin/bash -c "source ~/.bashrc"; /bin/bash -c "./install_deps.sh --workspace-path=/opt --install-path=/usr/local --no-sudo -j=2"
+#RUN cd /opt; wget https://raw.githubusercontent.com/blumenthal/ropod-base-cpp/master/install_deps.sh; chmod 755 install_deps.sh 
+COPY install_deps.sh /opt
+RUN cd /opt; chmod 755 install_deps.sh; /bin/bash -c "source ~/.bashrc"; /bin/bash -c "./install_deps.sh --workspace-path=/opt --install-path=/usr/local --no-sudo -j=2"
 
 # 	

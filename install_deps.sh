@@ -211,6 +211,7 @@ cmake -DBUILD_SHARED_LIBS=true -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} ..
 # Note that UBX modules need the -fPIC flag, thus we have to enable the shared flag for Libvariant.
 make ${J}
 ${SUDO} make install
+${SUDO} ldconfig
 cd ..
 cd ..
 
