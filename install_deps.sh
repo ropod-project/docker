@@ -230,7 +230,7 @@ echo "CZMQ library:"
 if [ ! -d czmq-${CZMQ_VERSION} ]; then
   #wget https://github.com/zeromq/czmq/archive/v${CZMQ_VERSION}.tar.gz
   #tar zxvf v${CZMQ_VERSION}.tar.gz
-  https://github.com/zeromq/czmq/releases/download/v${CZMQ_VERSION}/czmq-${CZMQ_VERSION}.tar.gz
+  wget https://github.com/zeromq/czmq/releases/download/v${CZMQ_VERSION}/czmq-${CZMQ_VERSION}.tar.gz
   tar zxvf czmq-${CZMQ_VERSION}.tar.gz
 fi
 cd czmq-${CZMQ_VERSION}/
