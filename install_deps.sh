@@ -234,7 +234,7 @@ if [ ! -d czmq-${CZMQ_VERSION} ]; then
   tar zxvf czmq-${CZMQ_VERSION}.tar.gz
 fi
 cd czmq-${CZMQ_VERSION}/
-./autogen.sh
+#./autogen.sh
 ./configure --prefix=${INSTALL_DIR}
 make ${J}
 ${SUDO} make install
