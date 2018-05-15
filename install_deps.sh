@@ -15,7 +15,8 @@ E.g. as used by the Docker build process: ./${0##*/} --workspace-path=/opt --ins
     --workspace-path=PATH  Path to where libraries and bulild. Default is ../
     --install-path=PATH    Path to where libraries and modeles are installed (make install) into.
     --zmq-versions=LABEL   Indicates the version bundle to be used. STABLE is default. Options are STABLE|EDGE
-    -j=VALUE               used for make -jVAULE 
+    -j=VALUE               used for make -jVAULE
+    --with-rwm-deps        If set, also install cpp dependencies for the ROPOD World Model (RWM). 		 
 EOF
 }
 
@@ -39,6 +40,7 @@ WORKSPACE_DIR="./"
 J="-j1"
 SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 ZMQ_VERSION_BUNDLE="STABLE"
+RWM_DEPS=false
 
 # Handle command line options
 while :; do
@@ -118,6 +120,9 @@ while :; do
       exit 1
       ;;
 
+    --with-rwm-deps)       
+      RWM_DEPS=true
+      ;;
 
     --)              # End of all options.
        shift
@@ -138,6 +143,7 @@ echo "[Parameter] WORKSPACE_DIR is set to: ${WORKSPACE_DIR}"
 echo "[Parameter] INSTALL_DIR is set to: ${INSTALL_DIR}"
 echo "[Parameter] ZMQ_VERSION_BUNDLE is set to: ${ZMQ_VERSION_BUNDLE}"
 echo "[Parameter] Parallel build parameter for make is set to: ${J}"
+echo "[Parameter] Option to install RWM dependencies is set to: ${RWM_DEPS}"
 
 # Go to workspace
 cd ${WORKSPACE_DIR}
@@ -271,7 +277,58 @@ ${SUDO} ldconfig
 cd ..
 cd ..
 
+####################### RWM dependencies (optional) #######################
+if [ "$RWM_DEPS" = true ]; then
 
+  echo "" 
+  echo "### Dependencies for the BRICS_3D libraries ###"
+  echo "Boost:"
+  ${SUDO} apt-get update
+  ${SUDO} apt-get install -y libboost-dev \
+                             libboost-thread-dev \
+                             libboost-regex-dev
+
+  echo "Eigen 3:"
+  ${SUDO} apt-get install -y libeigen3-dev
+
+  echo "Lib Cppunit for unit tests (optional):"
+  ${SUDO} apt-get install -y libcppunit-dev
+
+  echo "Lib Xerces for loading Open Street Maps"
+  ${SUDO} apt-get install -y libxerces-c-dev
+
+
+  echo ""
+  echo "### Compile and install BRICS_3D ###"
+
+  if [ ! -d brics_3d ]; then
+    git clone https://github.com/brics/brics_3d.git
+    cd brics_3d
+  else
+    cd brics_3d
+    git pull origin master
+  fi
+
+  mkdir build -p && cd build
+  cmake -DEIGEN_INCLUDE_DIR=/usr/include/eigen3 -DUSE_JSON=true -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} ..
+  # A note on the used flags: For some reason the CMake find script has problems to find Eigen3 thus we currently
+  # have to provide the path as a flag. JSON support has to be enabled because it is not a default option.
+  make ${J}
+  cd ..
+  #echo "export BRICS_3D_DIR=$PWD" >> ~/.bashrc
+  export BRICS_3D_DIR=$PWD 
+  #The BRICS_3D_DIR environment variable is needed for the other (below) modules to find BRICS_3D properly.
+  #source ~/.bashrc .
+
+  echo "############################ATTENTION###############################"
+  echo " ATTENTION: Please add the following environment variable:"
+  echo ""
+  echo "echo \"export BRICS_3D_DIR=${BRICS_3D_DIR}\" >> ~/.bashrc"
+
+
+cd ..
+
+fi
 
 cd ${SCRIPT_DIR} # go back
 set +e
