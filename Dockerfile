@@ -49,5 +49,6 @@ RUN cd /opt; /bin/bash -c "source ~/.bashrc"; /bin/bash -c "./install_deps.sh --
 
 # Additional environment variables
 ENV BRICS_3D_DIR /opt/brics_3d
+ENV FBX_MODULES /opt/brics_3d_function_blocks
 
 # 	

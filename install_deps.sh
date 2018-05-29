@@ -300,6 +300,8 @@ if [ "$RWM_DEPS" = true ]; then
   echo "Lib Xerces for loading Open Street Maps"
   ${SUDO} apt-get install -y libxerces-c-dev
 
+  #NOTE: apt-get install -y libyaml-dev is already installed earlier
+
   echo ""
   echo "### Compile and install BRICS_3D ###"
 
@@ -322,10 +324,48 @@ if [ "$RWM_DEPS" = true ]; then
   #The BRICS_3D_DIR environment variable is needed for the other (below) modules to find BRICS_3D properly.
   #source ~/.bashrc .
 
+
+
+  ######## BRICS_3D Function Blocks (plugins) ###########
+  echo ""
+  echo "###  BRICS_3D Function Blocks (plugins)  ###"
+
+  echo "brics_3d_function_blocks:"
+  # In case the BRICS_3D library is alredy installed
+  # in another location you can use the environment
+  # variable BRICS_3D_DIR to point to another installation location.
+  if [ ! -d brics_3d_function_blocks ]; then 
+    git clone https://github.com/blumenthal/brics_3d_function_blocks.git
+    git checkout develop
+    cd brics_3d_function_blocks
+  else
+    cd brics_3d_function_blocks
+    git pull origin develop
+  fi
+
+  mkdir build -p && cd build
+  cmake -DUSE_FBX=ON -DUSE_UBX=OFF -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} ..
+  # In case you retrive a "Could NOT find BRICS_3D" delete the
+  # CMake cache and try again. Sometimes the FindBRICS_3D script 
+  # keeps the variables BRICS_3D_NOT_FOUND though the system is setup correctly. 
+  make ${J}
+  # Per default the UBX modules are installed to /usr/local
+  # this can be adjusted be setting the CMake variable
+  # CMAKE_INSTALL_PREFIX to another folder. 
+  cd ..
+  #echo "export FBX_MODULES=$PWD" >> ~/.bashrc
+  export FBX_MODULES="${PWD}"
+  # The FBX_MODULES environment variable is needed for the other (below) 
+  # modules to find the BRICS_3D function blocks and typs.
+  #source ~/.bashrc .
+  cd ..
+
+
   echo "############################ATTENTION###############################"
-  echo " ATTENTION: Please add the following environment variable:"
+  echo " ATTENTION: Please add the following environment variables:"
   echo ""
   echo "echo \"export BRICS_3D_DIR=${BRICS_3D_DIR}\" >> ~/.bashrc"
+  echo "echo \"export FBX_MODULES=${FBX_MODULES}\" >> ~/.bashrc"
 
 
 cd ..
