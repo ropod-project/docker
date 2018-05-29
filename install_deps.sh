@@ -260,7 +260,10 @@ ${SUDO} make install
 ${SUDO} ldconfig
 cd ..
 
-### Optional JSON library; used for validation
+### Optional JSON library; used for validation; Requires libyaml-dev to be installed.
+echo "Lib yaml" #Reqired correct parsing at BRICS_3D
+${SUDO} apt-get install -y libyaml-dev
+
 echo "Libvariant (JSON)"
 if [ ! -d libvariant ]; then
   hg clone https://bitbucket.org/gallen/libvariant
@@ -296,9 +299,6 @@ if [ "$RWM_DEPS" = true ]; then
 
   echo "Lib Xerces for loading Open Street Maps"
   ${SUDO} apt-get install -y libxerces-c-dev
-
-  echo "Lib yaml" #Reqired correct parsing 
-  ${SUDO} apt-get install -y libyaml-dev
 
   echo ""
   echo "### Compile and install BRICS_3D ###"
