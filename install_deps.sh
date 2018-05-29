@@ -336,8 +336,8 @@ if [ "$RWM_DEPS" = true ]; then
   # variable BRICS_3D_DIR to point to another installation location.
   if [ ! -d brics_3d_function_blocks ]; then 
     git clone https://github.com/blumenthal/brics_3d_function_blocks.git
-    git checkout develop
     cd brics_3d_function_blocks
+    git checkout develop
   else
     cd brics_3d_function_blocks
     git pull origin develop
