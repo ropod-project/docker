@@ -323,7 +323,7 @@ if [ "$RWM_DEPS" = true ]; then
   export BRICS_3D_DIR=$PWD 
   #The BRICS_3D_DIR environment variable is needed for the other (below) modules to find BRICS_3D properly.
   #source ~/.bashrc .
-
+  cd ..
 
 
   ######## BRICS_3D Function Blocks (plugins) ###########
