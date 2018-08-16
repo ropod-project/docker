@@ -4,8 +4,9 @@ image: docker:stable
 variables:
   DOCKER_HOST: tcp://docker:2375/
   DOCKER_DRIVER: overlay2
-  CPP_IMAGE: git.ropod.org:4567/ropod/ropod-base-images/ropod-base:cpp
-  FMS_IMAGE: git.ropod.org:4567/ropod/ropod-base-images/ropod-base:fms
+  CPP_IMAGE: git.ropod.org:4567/ropod/docker-base-images/ropod-base:cpp
+  FMS_IMAGE: git.ropod.org:4567/ropod/docker-base-images/ropod-base:fms
+  ROS_IMAGE: git.ropod.org:4567/ropod/docker-base-images/ropod-base:ros-kinetic
 
 services:
   - name: docker:dind
@@ -28,5 +29,6 @@ build:
     - docker-compose build
     - docker push $CPP_IMAGE
     - docker push $FMS_IMAGE
+    - docker push $ROS_IMAGE
   only:
     - master

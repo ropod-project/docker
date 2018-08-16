@@ -12,3 +12,8 @@ services:
       dockerfile: ropod-base-fms/Dockerfile
     depends_on:
       - cpp
+  ros:
+    image: git.ropod.org:4567/ropod/ropod-base-images/ropod-base:ros-kinetic
+    build:
+      context: .
+      dockerfile: ropod-base-kinetic/Dockerfile
