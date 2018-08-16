@@ -1,4 +1,4 @@
-# Baseline developer image to compile and launch C++ components of the ROPOD EU project. 
+# Baseline developer image to compile and launch C++ components of the ROPOD EU project.
 #
 
 FROM ubuntu:16.04
@@ -22,7 +22,7 @@ RUN apt-get -y update && apt-get install -y \
 	curl \
 	unzip \
 	libjsoncpp-dev
-		
+
 # Install Gtest 1.7 from source
 RUN cd /opt && \
     mkdir googleTestMock && \
@@ -42,9 +42,9 @@ RUN cd /opt && \
     rm -rf /opt/googleTestMock
 
 # Get the install script
-#RUN cd /opt; wget https://raw.githubusercontent.com/blumenthal/ropod-base-cpp/master/install_deps.sh; chmod 755 install_deps.sh 
-COPY install_deps.sh /opt
-RUN cd /opt; chmod 755 install_deps.sh 
+#RUN cd /opt; wget https://raw.githubusercontent.com/blumenthal/ropod-base-cpp/master/install_deps.sh; chmod 755 install_deps.sh
+COPY ropod-base-cpp/install_deps.sh /opt
+RUN cd /opt; chmod 755 install_deps.sh
 RUN cd /opt; /bin/bash -c "source ~/.bashrc"; /bin/bash -c "./install_deps.sh --workspace-path=/opt --install-path=/usr/local --no-sudo -j=2"
 
-# 	
+#
