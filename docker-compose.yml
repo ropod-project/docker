@@ -1,19 +1,19 @@
 version: "2"
 services:
   cpp:
-    image: git.ropod.org:4567/ropod/ropod-base-images/ropod-base:cpp
+    image: git.ropod.org:4567/ropod/docker-base-images/ropod-base:cpp
     build:
       context: .
       dockerfile: ropod-base-cpp/Dockerfile
   fms:
-    image: git.ropod.org:4567/ropod/ropod-base-images/ropod-base:fms
+    image: git.ropod.org:4567/ropod/docker-base-images/ropod-base:fms
     build:
       context: .
       dockerfile: ropod-base-fms/Dockerfile
     depends_on:
       - cpp
   ros:
-    image: git.ropod.org:4567/ropod/ropod-base-images/ropod-base:ros-kinetic
+    image: git.ropod.org:4567/ropod/docker-base-images/ropod-base:ros-kinetic
     build:
       context: .
       dockerfile: ropod-base-kinetic/Dockerfile
