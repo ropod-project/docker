@@ -1,0 +1,32 @@
+image: docker:stable
+
+
+variables:
+  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_DRIVER: overlay2
+  CPP_IMAGE: git.ropod.org:4567/ropod/ropod-base-images/ropod-base:cpp
+  FMS_IMAGE: git.ropod.org:4567/ropod/ropod-base-images/ropod-base:fms
+
+services:
+  - name: docker:dind
+    command: ["--insecure-registry=git.ropod.org:4567"] # self-signed cetificate
+
+stages:
+  - build
+  - release
+
+before_script:
+  - docker info
+  - apk add --no-cache py-pip
+  - pip install docker-compose
+  - docker-compose -v
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN git.ropod.org:4567
+
+build:
+  stage: build
+  script:
+    - docker-compose build
+    - docker push $CPP_IMAGE
+    - docker push $FMS_IMAGE
+  only:
+    - master
