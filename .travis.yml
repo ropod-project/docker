@@ -1,0 +1,29 @@
+sudo: required
+
+services:
+  - docker
+
+language: cpp
+
+env:
+  global:
+    - CONTAINER_RELEASE_IMAGE: ropod/ropod-base:$TRAVIS_BRANCH
+
+stages:
+  - build
+  - name: deploy
+    if: (branch IN (master) AND type != "pull_request") OR tag = true
+
+jobs:
+  include:
+    - stage: build
+      script:
+        - docker build -t $CONTAINER_RELEASE_IMAGE .
+    - stage: deploy
+      name: "Docker Hub"
+      skip_cleanup: true
+      script:
+        - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
+        - docker build -t $CONTAINER_RELEASE_IMAGE .
+        - docker images
+        - travis_wait docker push $CONTAINER_RELEASE_IMAGE
