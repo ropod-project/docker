@@ -1,14 +1,17 @@
 version: "2"
 services:
   zyre-cpp:
-    image: git.ropod.org:4567/ropod/docker-base-images/ropod-base:cpp
+    image: git.ropod.org:4567/ropod/docker/ropod-base:zyre-cpp
     build:
       context: ./zyre/cpp/
       dockerfile: Dockerfile
+  ros-base:
+    image: git.ropod.org:4567/ropod/docker/ropod-base:kinetic
     build:
       context: .
-  ros:
-    image: git.ropod.org:4567/ropod/docker-base-images/ropod-base:ros-kinetic
+      dockerfile: ros/base.dockerfile
+  ros-comm:
+    image: git.ropod.org:4567/ropod/docker/ropod-base:kinetic-msgs-python3
     build:
       context: .
-      dockerfile: ropod-base-kinetic/Dockerfile
+      dockerfile: ros/communication.dockerfile
