@@ -1,10 +1,10 @@
 version: "2"
 services:
-  cpp:
+  zyre-cpp:
     image: git.ropod.org:4567/ropod/docker-base-images/ropod-base:cpp
     build:
-      context: .
-      dockerfile: ropod-base-cpp/Dockerfile
+      context: ./zyre/cpp/
+      dockerfile: Dockerfile
     build:
       context: .
   ros:
