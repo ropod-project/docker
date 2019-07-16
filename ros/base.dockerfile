@@ -8,3 +8,7 @@ RUN apt update -qq \
     python3-pip \
     vim \
     && rm -rf /var/lib/apt/lists/* \
+    && pip3 install rospkg catkin-pkg empy
+
+WORKDIR /opt/ropod/ros
+ENTRYPOINT ["/ros_entrypoint.sh"]
