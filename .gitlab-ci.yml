@@ -19,7 +19,7 @@ stages:
 before_script:
   - docker info
   - apk add --no-cache py-pip
-  - pip install docker-compose
+  - pip install -Iv docker-compose==1.23.2
   - docker-compose -v
   - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN git.ropod.org:4567
 
