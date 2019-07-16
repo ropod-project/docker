@@ -1,4 +1,4 @@
-FROM ropod/kinetic:base
+FROM git.ropod.org:4567/ropod/docker/ropod-base:kinetic
 
 WORKDIR /ropod_msgs_ws
 RUN catkin init \
