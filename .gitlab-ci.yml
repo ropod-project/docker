@@ -4,9 +4,9 @@ image: docker:stable
 variables:
   DOCKER_HOST: tcp://docker:2375/
   DOCKER_DRIVER: overlay2
-  CPP_IMAGE: git.ropod.org:4567/ropod/docker-base-images/ropod-base:cpp
-  FMS_IMAGE: git.ropod.org:4567/ropod/docker-base-images/ropod-base:fms
-  ROS_IMAGE: git.ropod.org:4567/ropod/docker-base-images/ropod-base:ros-kinetic
+  ZYRE_CPP_IMAGE: git.ropod.org:4567/ropod/docker/ropod-base:zyre-cpp
+  KINETIC_BASE_IMAGE: git.ropod.org:4567/ropod/docker/ropod-base:kinetic
+  KINETIC_MSGS_IMAGE: git.ropod.org:4567/ropod/docker/ropod-base:kinetic-msgs-python3
 
 services:
   - name: docker:dind
@@ -27,8 +27,8 @@ build:
   stage: build
   script:
     - docker-compose build
-    - docker push $CPP_IMAGE
-    - docker push $FMS_IMAGE
-    - docker push $ROS_IMAGE
+    - docker push $ZYRE_CPP_IMAGE
+    - docker push $KINETIC_BASE_IMAGE
+    - docker push $KINETIC_MSGS_IMAGE
   only:
     - master
