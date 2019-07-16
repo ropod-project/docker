@@ -14,4 +14,4 @@ services:
     image: git.ropod.org:4567/ropod/docker/ropod-base:kinetic-msgs-python3
     build:
       context: .
-      dockerfile: ros/communication.dockerfile
+      dockerfile: ros/msgs.dockerfile
