@@ -8,6 +8,8 @@ variables:
   KINETIC_BASE_IMAGE: git.ropod.org:4567/ropod/docker/ropod-base:kinetic
   KINETIC_MSGS_IMAGE: git.ropod.org:4567/ropod/docker/ropod-base:kinetic-msgs-python3
   FMS_BASE_IMAGE: git.ropod.org:4567/ropod/docker/ropod-base:fms
+  ROPOD_REGISTRY: git.ropod.org:4567/ropod/
+  DOCKER_HUB_ORG: ropod
 
 services:
   - name: docker:dind
@@ -24,12 +26,21 @@ before_script:
   - docker-compose -v
   - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN git.ropod.org:4567
 
-build:
+zyre base:
   stage: build
   script:
-    - docker-compose build
+    - docker-compose build zyre-cpp
     - docker push $ZYRE_CPP_IMAGE
+
+ROS kinetic:
+  stage: build
+  script:
+    - docker-compose build ros-base ros-comm
     - docker push $KINETIC_BASE_IMAGE
     - docker push $KINETIC_MSGS_IMAGE
-  only:
-    - master
+
+fleet management:
+  stage: build
+  script:
+    - docker-compose build fms-base
+    - docker push $FMS_BASE_IMAGE
