@@ -17,3 +17,10 @@ services:
       dockerfile: ros/msgs.dockerfile
     depends_on:
       - ros-base
+  fms-base:
+    image: git.ropod.org:4567/ropod/docker/ropod-base:fms
+    build:
+      context: ./fms
+      dockerfile: base.docker
+    depends_on:
+      - ros-comm
