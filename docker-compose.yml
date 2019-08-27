@@ -13,8 +13,8 @@ services:
   ros-comm:
     image: git.ropod.org:4567/ropod/docker/ropod-base:kinetic-msgs-python3
     build:
-      context: .
-      dockerfile: ros/msgs.dockerfile
+      context: ./ros
+      dockerfile: msgs.dockerfile
     depends_on:
       - ros-base
   fms-base:

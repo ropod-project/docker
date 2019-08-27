@@ -14,3 +14,6 @@ RUN sh /opt/ros/kinetic/setup.sh && \
     apt update -qq && \
     rosdep install --from-paths src --ignore-src --rosdistro=kinetic -y && \
     catkin build
+
+COPY ros_entrypoint.sh /
+ENTRYPOINT ["/ros_entrypoint"]
