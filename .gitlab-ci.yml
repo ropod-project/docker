@@ -9,6 +9,7 @@ variables:
   KINETIC_MSGS_IMAGE: git.ropod.org:4567/ropod/docker/ropod-base:kinetic-msgs-python3
   FMS_BASE_IMAGE: git.ropod.org:4567/ropod/docker/ropod-base:fms
   ROPOD_REGISTRY: git.ropod.org:4567/ropod/
+  DOCKERHUB_BASE_IMAGE: ropod/ropod-base:fms
   DOCKER_HUB_ORG: ropod
 
 services:
@@ -44,3 +45,6 @@ fleet management:
   script:
     - docker-compose build fms-base
     - docker push $FMS_BASE_IMAGE
+    - docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD
+    - docker tag $FMS_BASE_IMAGE $DOCKERHUB_BASE_IMAGE
+    - docker push $DOCKERHUB_BASE_IMAGE
