@@ -6,7 +6,7 @@ RUN git clone https://github.com/ropod-project/task-planner.git /opt/ropod/task-
 WORKDIR /opt/ropod/task-planner
 RUN python3 setup.py install
 
-RUN apt-get update && apt-get install -y gcc-multilib
+RUN apt-get update && apt-get install -y gcc gcc-multilib
 WORKDIR /opt/ropod/task-planner/bin
 RUN hg clone https://bitbucket.org/ipc2018-classical/explicit-baseline-planners fast-downward
 WORKDIR /opt/ropod/task-planner/bin/fast-downward
