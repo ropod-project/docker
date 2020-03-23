@@ -10,7 +10,7 @@ RUN hg clone https://bitbucket.org/ipc2018-classical/explicit-baseline-planners 
 WORKDIR /opt/ropod/task-planner/bin/fast-downward
 RUN python3 build.py
 WORKDIR /opt/ropod/task-planner
-RUN python3 setup.py install
+RUN pip3 install -e .
 
 WORKDIR /
 COPY --from=ropod_msgs /opt/ropod/ros /opt/ropod/ros
