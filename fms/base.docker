@@ -2,15 +2,15 @@ FROM git.ropod.org:4567/ropod/docker/ropod-base:kinetic-msgs-python3 AS ropod_ms
 
 FROM git.ropod.org:4567/ropod/ropod_common:latest
 
-RUN git clone https://github.com/ropod-project/task-planner.git /opt/ropod/task-planner
-WORKDIR /opt/ropod/task-planner
-RUN python3 setup.py install
-
-RUN apt-get update && apt-get install -y build-essential gcc g++ gcc-multilib libstdc++-5-dev lib32stdc++-5-dev
+RUN git clone https://github.com/ropod-project/task-planner.git /opt/ropod/task-planner \
+    && apt-get update && apt-get install -y build-essential gcc g++ gcc-multilib libstdc++-5-dev lib32stdc++-5-dev \
+    && rm -rf /var/lib/apt/lists/* 
 WORKDIR /opt/ropod/task-planner/bin
 RUN hg clone https://bitbucket.org/ipc2018-classical/explicit-baseline-planners fast-downward
 WORKDIR /opt/ropod/task-planner/bin/fast-downward
 RUN python3 build.py
+WORKDIR /opt/ropod/task-planner
+RUN python3 setup.py install
 
 WORKDIR /
 COPY --from=ropod_msgs /opt/ropod/ros /opt/ropod/ros
