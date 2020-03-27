@@ -8,7 +8,7 @@ RUN git clone https://github.com/ropod-project/task-planner.git /opt/ropod/task-
 WORKDIR /opt/ropod/task-planner/bin
 RUN wget "http://www.fast-downward.org/Releases/19.06?action=AttachFile&do=get&target=fast-downward-19.06.tar.gz" -O "fast-downward-19.06.tar.gz" \
     && tar -xf fast-downward-19.06.tar.gz \
-    && mv fast-downward-19.06/ fast-forward
+    && mv fast-downward-19.06/ fast-downward
 WORKDIR /opt/ropod/task-planner/bin/fast-downward
 RUN python3 build.py
 WORKDIR /opt/ropod/task-planner
